@@ -7,7 +7,6 @@
 
 void bufferHandler(char** buffer, int* index, char input){
     char* newBuffer = realloc(*buffer, sizeof(*buffer) * sizeof(char));
-   
     if(!newBuffer){
         fprintf(stderr,"Malloc failure\n");
         exit(1);
@@ -30,7 +29,7 @@ bool getToken(token_t *token){
 
     while(true){
         input = getchar();
-
+        
         switch(state){
             case BEGIN_S:
                 if(isalpha(input)){
@@ -38,8 +37,10 @@ bool getToken(token_t *token){
                     bufferHandler(&buffer, &index, input);
                     continue; 
                 }
+                else if(isspace(input) || input == '\n' ){
+                    continue;
+                }
                 else if(input == '='){
-                    bufferHandler(&buffer, &index, input);
                     token->type = ASSIG_T;
                     return true;
                 }
@@ -49,18 +50,29 @@ bool getToken(token_t *token){
                     continue; 
 
                 }
+                else if(input == ';'){
+                    token->type = SEMICOL_T;
+                    return true;
+                }
+                else if(input == EOF){
+                    token->type = EOF_T;
+                    return true;
+                }
                 return false;
+        
             case ID_S:  // Trying to read IDENTIFIER
                 if(isalpha(input) || isdigit(input) || input == '_'){ // TODO add numbers and other characters
                     bufferHandler(&buffer, &index, input);
                     continue; 
                 }
                 else{
+                    ungetc(input, stdin);
                     buffer[index] = '\0';
                     token->attribute = buffer;
                     token->type = ID_T;
                     return true;
                 }
+            
             case INT_S:
                 if(isdigit(input)){
                     bufferHandler(&buffer, &index, input);
@@ -72,22 +84,28 @@ bool getToken(token_t *token){
                     continue;
                 }
                 else{
+                    ungetc(input, stdin);
                     buffer[index] = '\0';
                     token->attribute = buffer;
                     token->type = INT_T;
                     return true; 
                 }
+            
             case FLOAT_S:
                 if(isdigit(input)){
                     bufferHandler(&buffer, &index, input);
                     continue;   
                 } 
                 else{
+                    ungetc(input, stdin);
                     buffer[index] = '\0';
                     token->attribute = buffer;
                     token->type = FLOAT_T;
                     return true; 
                 }
+            
+            
+            default: return false;
         }
     }
 }

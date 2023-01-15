@@ -9,6 +9,9 @@ typedef enum{
     FLOAT_T,
     STRING_T,
     ASSIG_T,
+    EOF_T,
+    SEMICOL_T,
+    L_PAR_T,
 }token_type;
 
 typedef enum{
