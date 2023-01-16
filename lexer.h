@@ -8,10 +8,29 @@ typedef enum{
     INT_T,
     FLOAT_T,
     STRING_T,
-    ASSIG_T,
-    EOF_T,
+    ASSIG_T,        // :
+    EOF_T,          // 5
     SEMICOL_T,
     L_PAR_T,
+    R_PAR_T,
+    L_BRAC_T,
+    R_BRAC_T,       // 10
+    ADD_T,
+    ADD_ASSIGN_T,
+    KW_T,           //KEYWORD
+    LOWER_T,
+    LOWER_EQ_T,     // 15
+    GREATER_T,
+    GREATER_EQ_T,
+    EQUALS_T,
+    SUB_T,
+    SUB_ASSIGN_T,
+    DIV_T,
+    DIV_ASSIGN_T,
+    MULTI_T,
+    MULTI_ASSIGN_T,
+    POW_T,
+
 }token_type;
 
 typedef enum{
@@ -20,6 +39,13 @@ typedef enum{
     INT_S,
     FLOAT_S,
     STRING_S,
+    ASSIG_S,
+    ADD_S,
+    SUB_S,
+    DIV_S,
+    MULTI_S,
+    LOWER_S,
+    GREATER_S,
 }STATES;
 
 typedef struct token{
@@ -30,4 +56,13 @@ typedef struct token{
 }token_t;
 
 bool getToken(token_t *token);
+
+
+/**
+ * @brief Reallocates the memory for the string buffer
+ * 
+ * @param buffer current string buffer
+ * @param index Position of the character to be pushed in buffer
+ * @param input Character to be pushed into buffer
+ */
 void bufferHandler(char** buffer, int* index, char input);
