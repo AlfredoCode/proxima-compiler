@@ -6,3 +6,4 @@ typedef enum{
 }err_e;
 
 void errMsg(err_e type, char *message);
+void warningMsg(const char *message);

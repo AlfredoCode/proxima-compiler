@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include "keywords.h"
+#include "err.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -11,8 +12,7 @@
 void bufferHandler(char** buffer, int* index, char input){
     char* newBuffer = realloc(*buffer, sizeof(*buffer) * sizeof(char));
     if(!newBuffer){
-        fprintf(stderr,"Malloc failure\n");
-        exit(1);
+        errMsg(INTERNAL, "Malloc failure");
     }
     *buffer = newBuffer;
     (*buffer)[*index] = input;
@@ -120,6 +120,9 @@ bool getToken(token_t *token){
                         separator = false;
                         bufferHandler(&buffer, &index, input);
                         continue;
+                    }
+                    if(separator){
+                        warningMsg("More than one digit separator '_' used");
                     }
                     separator = true;
                     continue;   

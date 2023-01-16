@@ -6,10 +6,10 @@
 int checkToken(token_t** token){
     *token = malloc(sizeof(token_t));
     if(!token){
-        errMsg(INTERNAL, "Memory allocation failure\n"); 
+        errMsg(INTERNAL, "Memory allocation failure"); 
     }
     if(!getToken(*token)){
-        errMsg(LEX_ERR, "Unexpected Input!\n");
+        errMsg(LEX_ERR, "Unexpected Input!");
     }
     // printf("Token type: %d, token attribute: %s\n", token->type, token->attribute);
     return 0;
@@ -24,7 +24,7 @@ int checkOperator(int type){
             if(type == ID_T){
                 return SUCCESS;
             }
-            errMsg(SYNTAX, "Forbidden assignment\n");
+            errMsg(SYNTAX, "Forbidden assignment");
         case SEMICOL_T:
             return SUCCESS;
         case ADD_ASSIGN_T:
@@ -55,10 +55,10 @@ int checkIfFunctionCall(){
             }
             return SUCCESS;
         default: 
-            errMsg(SYNTAX, "Missing semicol after statement\n");
+            errMsg(SYNTAX, "Missing semicol after statement");
         
     }
-    errMsg(INTERNAL, "Congratulations, you found bug and broke the compiler\n");
+    errMsg(INTERNAL, "Congratulations, you found bug and broke the compiler");
 }
 
 int rightOperand(){
@@ -97,7 +97,7 @@ int statList(){
                return statList(); 
                 
             }
-            errMsg(SYNTAX, "Wrong statement assignment\n");
+            errMsg(SYNTAX, "Wrong statement assignment");
         case L_PAR_T: // TODO PUSH L_PAR to global stack of L_PARs and remove each one when ')' occurs, if stack is not empty after parsing, then syntax error
             return statList();
         
