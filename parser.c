@@ -15,27 +15,31 @@ int checkToken(token_t** token){
     return 0;
 }
 
-int checkOperator(){
+int checkOperator(int type){
     token_t *tok;
     checkToken(&tok);
     
     switch(tok->type){
         case ASSIG_T:
-            return SUCCESS;
+            if(type == ID_T){
+                return SUCCESS;
+            }
+            errMsg(SYNTAX, "Forbidden assignment\n");
         case SEMICOL_T:
             return SUCCESS;
         case ADD_ASSIGN_T:
             return rightOperand();
-        case ADD_T:
+        case ADD_T: case SUB_T: case MULTI_T: case DIV_T:
             return rightOperand();
         case R_PAR_T:   // TODO Remove L_PAR from global stack, if stack is empty, then syntax error
-            return checkOperator();
+            return checkOperator(tok->type);
     }
 }
 
 int functionCallParams(){
     return SYNTAX;  // TODO
 }
+
 
 int checkIfFunctionCall(){
     token_t *tok;
@@ -47,7 +51,7 @@ int checkIfFunctionCall(){
                 functionCallParams();
             }
             else if(tok->type == R_PAR_T){
-                return checkOperator();
+                return checkOperator(tok->type);
             }
             return SUCCESS;
         default: 
@@ -68,7 +72,7 @@ int rightOperand(){
         case FLOAT_T:
         case INT_T:
         case STRING_T: 
-            return checkOperator();
+            return checkOperator(tok->type);
         case L_PAR_T:
             return rightOperand();
     }
@@ -84,11 +88,11 @@ int statList(){
     checkToken(&tok);
 
     switch(tok->type){
-        case ID_T:
         case FLOAT_T:
         case INT_T:
         case STRING_T:
-            if(checkOperator() == SUCCESS){
+        case ID_T:
+            if(checkOperator(tok->type) == SUCCESS){
                 
                return statList(); 
                 
@@ -96,8 +100,11 @@ int statList(){
             errMsg(SYNTAX, "Wrong statement assignment\n");
         case L_PAR_T: // TODO PUSH L_PAR to global stack of L_PARs and remove each one when ')' occurs, if stack is not empty after parsing, then syntax error
             return statList();
+        
+
         case EOF_T:
             return SUCCESS;
+        default: return SYNTAX;
             
 
     }

@@ -6,8 +6,9 @@
  */
 const char *keywords[] = {  "if", "elsif", "else", 
                             "func", "loop", "until",
-                            "concat", "ret", NULL
-                            };
+                            "concat", "ret", "and", "or", "not",
+                            "null", "NULL",
+                            NULL};
 
 bool isKeyword(const char* input){
     int i = 0;
