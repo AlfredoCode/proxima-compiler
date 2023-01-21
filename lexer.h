@@ -17,19 +17,19 @@ typedef enum{
     R_BRAC_T,       // 10
     ADD_T,
     ADD_ASSIGN_T,
-    KW_T,           //KEYWORD
+    KW_T,           // KEYWORD
     LOWER_T,
     LOWER_EQ_T,     // 15
     GREATER_T,
     GREATER_EQ_T,
     EQUALS_T,
     SUB_T,
-    SUB_ASSIGN_T,
+    SUB_ASSIGN_T,   // 20
     DIV_T,
     DIV_ASSIGN_T,
     MULTI_T,
     MULTI_ASSIGN_T,
-    POW_T,
+    POW_T,          // 25
 
 }token_type;
 
@@ -50,7 +50,7 @@ typedef enum{
 
 typedef struct token{
     char* attribute;    // FOR NAME OF IDs
-    char* kw;   // NAME OF KEYWORD
+    char* kw;           // NAME OF KEYWORD
     token_type type;    // TOKEN TYPE
 
 }token_t;
@@ -66,3 +66,4 @@ bool getToken(token_t *token);
  * @param input Character to be pushed into buffer
  */
 void bufferHandler(char** buffer, int* index, char input);
+bool returnHandler(bool type, char** buffer);

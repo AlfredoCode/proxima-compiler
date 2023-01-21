@@ -19,6 +19,12 @@ void bufferHandler(char** buffer, int* index, char input){
     (*index)++;
 }
 
+bool returnHandler(bool type, char** buffer){
+    if((*buffer) != NULL){
+        free(*buffer);
+    }
+    return type;
+}
 
 bool getToken(token_t *token){
     STATES state = BEGIN_S;
@@ -56,11 +62,11 @@ bool getToken(token_t *token){
                 }
                 else if(input == ';'){
                     token->type = SEMICOL_T;    // ;
-                    return true;
+                    return returnHandler(true, &buffer);
                 }
                 else if(input == EOF){
                     token->type = EOF_T;    // End Of File
-                    return true;
+                    return returnHandler(true, &buffer);
                 }
                 else if(input == '+'){
                     state = ADD_S;
@@ -80,11 +86,11 @@ bool getToken(token_t *token){
                 }
                 else if(input == '('){
                     token->type = L_PAR_T;  // '('
-                    return true;
+                    return returnHandler(true, &buffer);
                 }
                 else if(input == ')'){
                     token->type = R_PAR_T;  // ')'
-                    return true;
+                    return returnHandler(true, &buffer);
                 }
                 else if(input == '<'){
                     state = LOWER_S;
@@ -94,7 +100,7 @@ bool getToken(token_t *token){
                     state = GREATER_S;
                     continue;
                 }
-                return false;
+                return returnHandler(false, &buffer);
         
             case ID_S:  // Trying to read IDENTIFIER
                 if(isalpha(input) || isdigit(input) || input == '_'){ // TODO add numbers and other characters
@@ -107,11 +113,11 @@ bool getToken(token_t *token){
                     if(isKeyword(buffer)){
                         token->type = KW_T;
                         token->kw = buffer;
-                        return true;
+                        return returnHandler(true, &buffer);
                     }
                     token->attribute = buffer;
                     token->type = ID_T;     // Identifier
-                    return true;
+                    return returnHandler(true, &buffer);
                 }
             
             case INT_S:
@@ -134,13 +140,13 @@ bool getToken(token_t *token){
                 }
                 else{
                     if(separator){
-                        return false;   // We do not want something like 42000_
+                        return returnHandler(false, &buffer);   // We do not want something like 42000_
                     }
                     ungetc(input, stdin);
                     buffer[index] = '\0';
                     token->attribute = buffer;
                     token->type = INT_T;    // Integer number
-                    return true; 
+                    return returnHandler(true, &buffer);
                 }
             
             case FLOAT_S:
@@ -153,7 +159,7 @@ bool getToken(token_t *token){
                     buffer[index] = '\0';
                     token->attribute = buffer;
                     token->type = FLOAT_T;  // Float number
-                    return true; 
+                    return returnHandler(true, &buffer);
                 }
             case ASSIG_S:
                 if(input == ':'){
@@ -163,7 +169,7 @@ bool getToken(token_t *token){
                     token->type = ASSIG_T;  // :
                     ungetc(input, stdin);
                 }
-                return true;
+                return returnHandler(true, &buffer);
             case ADD_S:
                 if(input == ':'){
                     token->type = ADD_ASSIGN_T; // +:
@@ -172,7 +178,7 @@ bool getToken(token_t *token){
                     ungetc(input, stdin);
                     token->type = ADD_T;    // '+'
                 }
-                return true;
+                return returnHandler(true, &buffer);
             case SUB_S:
                 if(input == ':'){
                     token->type = SUB_ASSIGN_T; // "-:"
@@ -181,7 +187,7 @@ bool getToken(token_t *token){
                     ungetc(input, stdin);
                     token->type = SUB_T;    // '-'
                 }
-                return true;
+                return returnHandler(true, &buffer);
             case MULTI_S:
                 if(input == ':'){
                     token->type = MULTI_ASSIGN_T; // "*:"
@@ -193,7 +199,7 @@ bool getToken(token_t *token){
                     ungetc(input, stdin);
                     token->type = MULTI_T;  // '*'
                 }
-                return true;
+                return returnHandler(true, &buffer);
             case DIV_S:
                 if(input == ':'){
                     token->type = DIV_ASSIGN_T; // "/:"
@@ -202,7 +208,7 @@ bool getToken(token_t *token){
                     ungetc(input, stdin);
                     token->type = DIV_T; // '/'
                 }
-                return true;
+                return returnHandler(true, &buffer);
             case LOWER_S:
                 if(input == ':'){
                     token->type = LOWER_EQ_T;   // <:
@@ -211,9 +217,9 @@ bool getToken(token_t *token){
                     ungetc(input, stdin);
                     token->type = LOWER_T;  // <
                 }
-                return true;
+                return returnHandler(true, &buffer);
             
-            default: return false;
+            default: return returnHandler(false, &buffer);
         }
     }
 }
